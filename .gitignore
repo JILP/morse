@@ -1,0 +1,17 @@
+# Byte-compiled
+__pycache__/
+
+# Distribution / packaging
+*.egg-info/
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# ignore tmp files
+/tmp/
+
+# jupyter notebook
+.ipynb_checkpoints/
