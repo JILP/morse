@@ -4,8 +4,8 @@ from wtforms.validators import DataRequired
 
 
 class MessageForm(FlaskForm):
-    msg = TextAreaField('What is your message?',
+    msg = TextAreaField('From text',
                         render_kw={"placeholder": "what is your message?"},
                         validators=[DataRequired()])
-    translated_msg = TextAreaField('')
+    translated_msg = TextAreaField('To morse', render_kw={'readonly': True})
     submit = SubmitField('Translate')
