@@ -6,6 +6,22 @@ Implements morse encoding/decoding functions
 
 from meli.morse.domain.alphabet.international import international_code
 from meli.morse.domain.decoder.naive_decoder import NaiveBitDecoder as Naive
+from meli.morse.domain.timing.international import InternationalTiming
+
+
+def decodeBits2Morse(bits):
+    
+    if isinstance(bits, int):
+        bits = bin(bits)[2:]
+    elif isinstance(bits, bytes):
+        bits = ''.join(([bin(byte)[2:].zfill(4) for byte in bits]))
+    translator = MorseTranslator()
+    return translator.bits2morse(bits)
+
+
+def translate2human(morse_str):    
+    translator = MorseTranslator()
+    return translator.morse2text(morse_str)
 
 
 class MorseFormat:
@@ -16,6 +32,15 @@ class MorseFormat:
         self.intra_char = ''
         self.inter_char = ' '
         self.inter_word = ' ' * 4
+
+    def to_dict(self):
+        return {
+            'dot': self.dot,
+            'dash': self.dash,
+            'intra_char': self.intra_char, 
+            'inter_char': self.inter_char,
+            'inter_word': self.inter_word
+        }
 
 
 class MorseTranslator:
@@ -56,8 +81,16 @@ class MorseTranslator:
             raise ValueError(f'Invalid character: "{char}"')
         return self.alpha2morse[char]
 
-    def morse2bits(self, msg, timing):
+    def morse2bits(self, msg, timing=None):
+        if not timing:
+            timing = InternationalTiming(1)
         return self.bit_decoder.encode(msg, self.format, timing)
 
     def bits2morse(self, bit_msg):
         return self.bit_decoder.decode(bit_msg, self.format)
+
+    def text2bits(self, text_msg, timing=None):
+        if not timing:
+            timing = InternationalTiming(1)
+        morse = self.text2morse(text_msg)
+        return self.morse2bits(morse, timing)

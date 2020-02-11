@@ -34,3 +34,6 @@ class BitDecoder:
             raise ValueError(f'Invalid morse simbol: "{symbol}"')
         duration = timing.dot if symbol == morse_format.dot else timing.dash
         return '1' * duration
+    
+    def decode(self, bit_msg, morse_format):
+        pass

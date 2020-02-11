@@ -5,7 +5,7 @@ from meli.morse.domain.decoder.bit_decoder import BitDecoder
 class NaiveBitDecoder(BitDecoder):
 
     def decode(self, bit_msg, morse_format):
-        if not bit_msg:
+        if not bit_msg or '1' not in bit_msg:
             raise ValueError(f'Invalid bit sequence: "{bit_msg}"')
 
         min_len = 99999
@@ -28,8 +28,8 @@ class NaiveBitDecoder(BitDecoder):
                 parsed.append((prev, count))
             count = 1
             prev = bit
-        # Process last bit sequence
-        if bit == '1' and count < min_len:
+        # Process last '1' bits sequence, (zeros stripped)
+        if count < min_len:
             min_len = count
         parsed.append((bit, count))
 
@@ -38,7 +38,7 @@ class NaiveBitDecoder(BitDecoder):
         normalized = []
         for bit, count in parsed:
             if bit == '1':
-                is_dot = abs(timing.dot - count) < abs(timing.dash - count)
+                is_dot = abs(timing.dot - count) <= abs(timing.dash - count)
                 seq = morse_format.dot if is_dot else morse_format.dash
             else:
                 is_intra_char = (abs(timing.intra_char - count)

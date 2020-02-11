@@ -1,5 +1,6 @@
 Flask==1.1.1
 Flask-Bootstrap==3.3.7.1
+flask-swagger-ui==3.20.9
 Flask-WTF==0.14.2
 jenkspy==0.1.5
 flake8==3.7.9

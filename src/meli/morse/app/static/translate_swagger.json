@@ -1,0 +1,386 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "swagger API",
+        "version": "1.0.0",
+        "title": "Morse Translator",
+        "contact": {
+            "email": "seanwasere@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "servers": [
+        {
+            "url": "/translate/v1"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Morse Code Translator QUATROCHI",
+            "description": "Example API for encoding/decoding morse messages"
+        }
+    ],
+    "paths": {
+        "/2text": {
+            "post": {
+                "tags": [
+                    "Translation Requests"
+                ],
+                "summary": "Translate message to text",
+                "requestBody": {
+                    "description": "Translate Request Post Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/2TextRequestBody"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/2TextResponseBody"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/2morse": {
+            "post": {
+                "tags": [
+                    "Translation Requests"
+                ],
+                "summary": "Encode message to morse",
+                "requestBody": {
+                    "description": "Translate Request Post Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/2MorseRequestBody"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/2MorseResponseBody"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/2bits": {
+            "post": {
+                "tags": [
+                    "Translation Requests"
+                ],
+                "summary": "Encode message to a binary signal",
+                "requestBody": {
+                    "description": "Translate Request Post Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/2BitsRequestBody"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/2BitsResponseBody"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "MorseFormat": {
+                "type": "object",
+                "description": "Morse code format",
+                "properties": {
+                    "dot": {
+                        "type": "string",
+                        "description": "Dot representation",
+                        "default": ".",
+                        "example": "."
+                    },
+                    "dash": {
+                        "type": "string",
+                        "description": "Dash representation",
+                        "default": "-",
+                        "example": "-"
+                    },
+                    "intra_char": {
+                        "type": "string",
+                        "description": "Intra chararacter separator",
+                        "default": "",
+                        "example": ""
+                    },
+                    "inter_char": {
+                        "type": "string",
+                        "description": "Inter chararacter separator",
+                        "default": " ",
+                        "example": " "
+                    },
+                    "inter_word": {
+                        "type": "string",
+                        "description": "Inter word separator",
+                        "default": "    ",
+                        "example": " / "
+                    }
+                }
+            },
+            "2TextRequestBody": {
+                "type": "object",
+                "required": ["msg"],
+                "properties": {
+                    "msg": {
+                        "type": "object",
+                        "required": ["src", "content"],
+                        "properties": {
+                            "src": {
+                                "type": "string",
+                                "description": "Source encoding",
+                                "enum": [
+                                    "morse",
+                                    "bits",
+                                ],
+                                "example": "morse"
+                            },
+                            "content": {
+                                "type": "string",
+                                "description": "Message content",
+                                "format": "string",
+                                "example": "-- . .-.. .."
+                            },
+                            "format": {
+                                "$ref": "#/components/schemas/MorseFormat"
+                            }
+                        }
+                    }
+                }
+            },
+            "2TextResponseBody": {
+                "type": "object",
+                "required": ["msg"],
+                "properties": {
+                    "msg": {
+                        "type": "object",
+                        "required": ["src", "content"],
+                        "properties": {
+                            "src": {
+                                "type": "string",
+                                "description": "Source encoding",
+                                "default": "text",
+                                "example": "text"
+                            },
+                            "content": {
+                                "type": "string",
+                                "description": "Message content",
+                                "format": "string",
+                                "example": "MELI"
+                                
+                            }
+                        }
+                    }  
+                }
+            },
+            "2MorseRequestBody": {
+                "type": "object",
+                "required": ["msg"],
+                "properties": {
+                    "msg": {
+                        "type": "object",
+                        "required": ["src", "content"],
+                        "properties": {
+                            "src": {
+                                "type": "string",
+                                "description": "Source encoding",
+                                "enum": [
+                                    "text",
+                                    "bits",
+                                ],
+                                "example": "text"
+                            },
+                            "content": {
+                                "type": "string",
+                                "description": "Message content",
+                                "format": "string",
+                                "example": "MELI"
+                            },
+                            "format": {
+                                "$ref": "#/components/schemas/MorseFormat"
+                            }
+                        }
+                    }  
+                }
+            },
+            "2MorseResponseBody": {
+                "type": "object",
+                "required": ["msg"],
+                "properties": {
+                    "msg": {
+                        "type": "object",
+                        "required": ["src", "content", "format"],
+                        "properties": {
+                            "src": {
+                                "type": "string",
+                                "description": "Source encoding",
+                                "default": "morse",
+                                "example": "morse"
+                            },
+                            "content": {
+                                "type": "string",
+                                "description": "Message content",
+                                "format": "string",
+                                "example": "-- . .-.. .."
+                                
+                            },
+                            "format": {
+                                "$ref": "#/components/schemas/MorseFormat"
+                            }
+                        }
+                    }  
+                }
+            },
+            "2BitsRequestBody": {
+                "type": "object",
+                "required": ["msg"],
+                "properties": {
+                    "msg": {
+                        "type": "object",
+                        "required": ["src", "content"],
+                        "properties": {
+                            "src": {
+                                "type": "string",
+                                "description": "Source encoding",
+                                "enum": [
+                                    "text",
+                                    "morse",
+                                ],
+                                "example": "morse"
+                            },
+                            "content": {
+                                "type": "string",
+                                "description": "Message content",
+                                "format": "string",
+                                "example": "-- . .-.. .."
+                            },
+                            "format": {
+                                "$ref": "#/components/schemas/MorseFormat"
+                            }
+                        }
+                    }  
+                }
+            },
+            "2BitsResponseBody": {
+                "type": "object",
+                "required": ["msg"],
+                "properties": {
+                    "msg": {
+                        "type": "object",
+                        "required": ["src", "content"],
+                        "properties": {
+                            "src": {
+                                "type": "string",
+                                "description": "Source encoding",
+                                "default": "bits",
+                                "example": "bits"
+                            },
+                            "content": {
+                                "type": "string",
+                                "description": "Message content",
+                                "format": "string",
+                                "example": "11101110001000101110101000101"
+                                
+                            }
+                        }
+                    }  
+                }
+            },
+            "Error": {
+                "type": "object",
+                "required": ["error", "message"],
+                "properties": {
+                    "error": {
+                        "type": "string",
+                        "format": "string",
+                        "description": "Error type",
+                        "example": "bad request"
+                    },
+                    "message": {
+                        "type": "string",
+                        "format": "string",
+                        "description": "Error message",
+                        "example": "Message not valid"
+                    }
+                }
+            },
+        }
+    }
+}

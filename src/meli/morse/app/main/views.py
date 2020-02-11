@@ -1,7 +1,8 @@
 import flask
-from .forms import MessageForm
-from . import main
 
+from . import main
+from .forms import MessageForm
+from meli.morse.app.swagger import SWAGGER_URL
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -16,4 +17,5 @@ def index():
     form.translated_msg.data = flask.session.get('translated_msg')
     return flask.render_template('index.html',
                                  form=form,
-                                 msg=flask.session.get('msg'))
+                                 msg=flask.session.get('msg'),
+                                 translate_api = flask.url_for("main.index") + SWAGGER_URL)
