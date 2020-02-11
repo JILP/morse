@@ -33,17 +33,18 @@ class JenksBitDecoder(BitDecoder):
         len_set[bit].add(count)
         parsed.append((bit, count))
 
+        pulse_satisfies_jenks = len(len_set['1']) > 2
+        if pulse_satisfies_jenks:
+            pulse_breaks = jenkspy.jenks_breaks(len_set['1'], 2)
+        else:
+            pulse_breaks = [0] + sorted(len_set['1'])
+
         space_satisfy_jenks = len(len_set['0']) > 3
         if space_satisfy_jenks:
             space_breaks = jenkspy.jenks_breaks(len_set['0'], 3)
         else:
             space_breaks = sorted(len_set['0'])
 
-        pulse_satisfies_jenks = len(len_set['1']) > 2
-        if pulse_satisfies_jenks:
-            pulse_breaks = jenkspy.jenks_breaks(len_set['1'], 2)
-        else:
-            pulse_breaks = [0] + sorted(len_set['1'])
         
         normalized = []
         for bit, count in parsed:
@@ -51,8 +52,11 @@ class JenksBitDecoder(BitDecoder):
                 is_dot = count <= pulse_breaks[1]          # first break 
                 seq = morse_format.dot if is_dot else morse_format.dash
             else:
-                is_intra_char = count < space_breaks[1]   # first break
-                is_inter_word = count >= space_breaks[2]  # second break
+                if len(space_breaks) < 2:
+                    is_intra_char = True
+                else:
+                    is_intra_char = count < space_breaks[1]   # first break
+                    is_inter_word = count >= space_breaks[2]  # second break
                 if is_intra_char:
                     seq = morse_format.intra_char
                 elif is_inter_word:
